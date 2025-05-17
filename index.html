@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Conversor Universal de Unidades - Ferramenta Essencial para Estudantes</title>
+  <style>
+    :root {
+      --primary-color: #0077cc;
+      --primary-hover: #005fa3;
+      --bg-color: white;
+      --text-color: #2c3e50;
+      --secondary-text: #555;
+      --border-color: #ccc;
+      --bg-gradient-start: #74ebd5;
+      --bg-gradient-end: #ACB6E5;
+      --history-bg: #f8f9fa;
+      --history-border: #e9ecef;
+      --student-banner-bg: #e3f2fd;
+      --student-banner-border: #2196F3;
+      --student-banner-text: #0d47a1;
+      --student-highlight-bg: #f5f5f5;
+    }
+
+    .dark-mode {
+      --primary-color: #4da6ff;
+      --primary-hover: #1a8cff;
+      --bg-color: #2c3e50;
+      --text-color: #f8f9fa;
+      --secondary-text: #adb5bd;
+      --border-color: #495057;
+      --bg-gradient-start: #1e3c72;
+      --bg-gradient-end: #2a5298;
+      --history-bg: #343a40;
+      --history-border: #495057;
+      --student-banner-bg: #0d3c61;
+      --student-banner-border: #64b5f6;
+      --student-banner-text: #bbdefb;
+      --student-highlight-bg: #37474f;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, var(--bg-gradient-start), var(--bg-gradient-end));
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      color: var(--text-color);
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    .container {
+      background-color: var(--bg-color);
+      padding: 40px;
+      border-radius: 20px;
+      max-width: 800px;
+      width: 100%;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      transition: background 0.3s ease;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 26px;
+      margin-bottom: 10px;
+      color: var(--text-color);
+    }
+
+    p.description {
+      text-align: center;
+      font-size: 16px;
+      color: var(--secondary-text);
+      margin-bottom: 30px;
+    }
+
+    .student-banner {
+      background-color: var(--student-banner-bg);
+      border-left: 5px solid var(--student-banner-border);
+      padding: 15px;
+      margin-bottom: 25px;
+      border-radius: 8px;
+      color: var(--student-banner-text);
+    }
+
+    .student-highlights {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .student-highlight {
+      flex: 1;
+      min-width: 200px;
+      background-color: var(--student-highlight-bg);
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+      color: var(--text-color);
+    }
+
+    select, input, button {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      margin-top: 5px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 10px;
+      transition: 0.3s;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+
+    select:focus, input:focus {
+      border-color: var(--primary-color);
+      outline: none;
+    }
+
+    button {
+      background-color: var(--primary-color);
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+    }
+
+    button:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .button-swap {
+      background-color: #6c757d;
+      margin: 5px 0;
+    }
+
+    .button-swap:hover {
+      background-color: #5a6268;
+    }
+
+    #resultado {
+      margin-top: 20px;
+      font-size: 18px;
+      text-align: center;
+      font-weight: bold;
+      color: var(--text-color);
+    }
+
+    .history-container {
+      margin-top: 20px;
+      max-height: 200px;
+      overflow-y: auto;
+      border: 1px solid var(--history-border);
+      border-radius: 10px;
+      padding: 10px;
+      background-color: var(--history-bg);
+    }
+
+    .history-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: var(--text-color);
+    }
+
+    .history-item {
+      padding: 8px;
+      border-bottom: 1px solid var(--history-border);
+      font-size: 14px;
+    }
+
+    .history-item:last-child {
+      border-bottom: none;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 15px;
+    }
+
+    .theme-toggle {
+      background: none;
+      border: none;
+      color: var(--text-color);
+      cursor: pointer;
+      font-size: 24px;
+      padding: 5px;
+    }
+
+    .clear-history {
+      background-color: #dc3545;
+      width: auto;
+      padding: 8px 15px;
+      margin-bottom: 10px;
+    }
+
+    .clear-history:hover {
+      background-color: #c82333;
+    }
+
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="controls">
+      <button class="theme-toggle" id="themeToggle">🌑</button>
+    </div>
+    
+    <h1>Conversor Universal de Unidades</h1>
+    <p class="description">
+      Converta rapidamente entre diversas unidades de medida em diferentes categorias como temperatura, massa, energia, volume, dados e muito mais!
+    </p>
+    
+    <div class="student-banner">
+      <h3 style="margin-top: 0; color: inherit;">✨ Ferramenta Essencial para Estudantes ✨</h3>
+      <p>Este conversor é <strong>recomendado por professores</strong> e amplamente utilizado por estudantes de:</p>
+      
+      <div class="student-highlights">
+        <div class="student-highlight">
+          <strong>Engenharias</strong><br>
+          Converta entre unidades de força, pressão, potência e medidas técnicas com precisão.
+        </div>
+        <div class="student-highlight">
+          <strong>Ciências Exatas</strong><br>
+          Ideal para cálculos em Física, Química e Matemática com conversões instantâneas.
+        </div>
+        <div class="student-highlight">
+          <strong>Computação</strong><br>
+          Conversões precisas entre unidades de armazenamento e processamento de dados.
+        </div>
+        <div class="student-highlight">
+          <strong>Medicina</strong><br>
+          Essencial para dosagens, pressões e unidades bioquímicas.
+        </div>
+      </div>
+      
+      <p style="margin-bottom: 0; margin-top: 10px;"><strong>Dica para estudantes:</strong> Use o histórico para acompanhar seus cálculos e o tema escuro para estudos noturnos!</p>
+    </div>
+
+    <label for="categoria">Categoria:</label>
+    <select id="categoria" onchange="atualizarUnidades()"></select>
+
+    <label for="valor">Valor:</label>
+    <input type="number" id="valor" placeholder="Digite o valor" />
+
+    <label for="de">Converter de:</label>
+    <select id="de"></select>
+
+    <button class="button-swap" onclick="swapUnits()">↕ Trocar Unidades</button>
+
+    <label for="para">Para:</label>
+    <select id="para"></select>
+
+    <button onclick="converter()">Converter</button>
+
+    <div id="resultado"></div>
+
+    <div class="history-header">
+      <div class="history-title">Histórico de Conversões</div>
+      <button class="clear-history" id="clearHistory">Limpar Histórico</button>
+    </div>
+    
+    <div class="history-container">
+      <div id="historyList"></div>
+    </div>
+  </div>
+
+  <script>
+    const unidades = {
+      "ângulo": {
+        "grau": 1,
+        "mil": 0.05625,
+        "minuto de arco": 1/60,
+        "radiano": 57.2958,
+        "segundo de arco": 1/3600,
+        "volta": 360
+      },
+      "área": {
+        "acre": 4046.86,
+        "are (a)": 100,
+        "centiare (ca)": 1,
+        "cm²": 0.0001,
+        "ha": 10000,
+        "jarda²": 0.836127,
+        "km²": 1e6,
+        "m²": 1,
+        "milha²": 2589988,
+        "mm²": 1e-6,
+        "pé²": 0.092903,
+        "polegada²": 0.00064516,
+        "tarefa (Bahia)": 3000
+      },
+      "comprimento": {
+        "ano-luz": 9.461e15,
+        "cm": 0.01,
+        "ft": 0.3048,
+        "in": 0.0254,
+        "km": 1000,
+        "m": 1,
+        "mi": 1609.34,
+        "milha náutica": 1852,
+        "mm": 0.001,
+        "nm": 1e-9,
+        "parsec (pc)": 3.086e16,
+        "UA (Unidade Astronômica)": 1.496e11,
+        "µm": 1e-6,
+        "yd": 0.9144
+      },
+      "dados": {
+        "bit": 1,
+        "byte": 8,
+        "EiB": 1.1529215e18,
+        "GB": 8.59e9,
+        "GiB": 8.59e9,
+        "KB": 8192,
+        "KiB": 8192,
+        "MB": 8388608,
+        "MiB": 8.389e6,
+        "nibble": 4,
+        "PB": 9.007e15,
+        "PiB": 1.1259e15,
+        "TB": 8.796e12,
+        "TiB": 8.796e12
+      },
+      "energia": {
+        "BTU": 1055.06,
+        "cal": 4.184,
+        "eV": 1.602e-19,
+        "erg": 1e-7,
+        "J": 1,
+        "kcal": 4184,
+        "kJ": 1000,
+        "MJ": 1e6,
+        "termia": 1.055e8,
+        "Wh": 3600,
+        "kWh": 3600000
+      },
+      "força": {
+        "dina": 1e-5,
+        "kgf": 9.80665,
+        "kN": 1000,
+        "lbf": 4.44822,
+        "libra-pé": 1.35582,
+        "N": 1
+      },
+      "frequência": {
+        "GHz": 1e9,
+        "Hz": 1,
+        "kHz": 1000,
+        "MHz": 1e6,
+        "rpm": 1/60,
+        "THz": 1e12
+      },
+      "iluminação": {
+        "candela (cd)": 1,
+        "lúmen (lm)": 1,
+        "lux (lx)": 1
+      },
+      "massa": {
+        "arroba": 14.7,
+        "g": 0.001,
+        "grain (gr)": 0.0000648,
+        "kg": 1,
+        "lb": 0.453592,
+        "mg": 1e-6,
+        "oz": 0.0283495,
+        "pedra": 6.35029,
+        "quilate": 0.0002,
+        "t": 1000,
+        "tonelada curta": 907.185,
+        "tonelada longa": 1016.05
+      },
+      "potência": {
+        "BTU/h": 0.293071,
+        "cal/s": 4.1868,
+        "CV": 735.499,
+        "HP": 745.7,
+        "kW": 1000,
+        "MW": 1e6,
+        "W": 1
+      },
+      "pressão": {
+        "atm": 101325,
+        "bar": 100000,
+        "inHg": 3386.39,
+        "kPa": 1000,
+        "MPa": 1e6,
+        "mmHg": 133.322,
+        "Pa": 1,
+        "psi": 6894.76,
+        "Torr": 133.322
+      },
+      "radioatividade": {
+        "becquerel (Bq)": 1,
+        "curie (Ci)": 3.7e10,
+        "gray (Gy)": 1,
+        "sievert (Sv)": 1
+      },
+      "temperatura": {
+        "C": 1,
+        "F": 1,
+        "K": 1,
+        "R": 1,
+        "Ré": 1
+      },
+      "tempo": {
+        "ano": 3.154e7,
+        "dia": 86400,
+        "h": 3600,
+        "mês": 2.628e6,
+        "milênio": 3.154e10,
+        "min": 60,
+        "ms": 0.001,
+        "ns": 1e-9,
+        "s": 1,
+        "século": 3.154e9,
+        "semana": 604800,
+        "µs": 1e-6
+      },
+      "velocidade": {
+        "km/h": 0.277778,
+        "Mach": 343,
+        "m/s": 1,
+        "mi/h": 0.44704,
+        "nó": 0.514444,
+        "pé/s": 0.3048,
+        "velocidade da luz (c)": 299792458
+      },
+      "volume": {
+        "alqueire (volume)": 36.27,
+        "barril (petróleo)": 158.987,
+        "colher de chá": 0.00492892,
+        "colher de sopa": 0.0147868,
+        "fl oz": 0.0295735,
+        "gal": 3.78541,
+        "L": 1,
+        "m³": 1000,
+        "mL": 0.001,
+        "pt": 0.473176,
+        "qt": 0.946353,
+        "xícara": 0.236588
+      },
+      "vazão": {
+        "cfm": 0.471947,
+        "gpm": 0.0630902,
+        "m³/h": 0.277778
+      }
+    };
+
+    const nomes = {
+      "ângulo": {
+        "grau": "Grau",
+        "mil": "Mil angular",
+        "minuto de arco": "Minuto de arco",
+        "radiano": "Radiano",
+        "segundo de arco": "Segundo de arco",
+        "volta": "Volta"
+      },
+      "área": {
+        "acre": "Acre",
+        "are (a)": "Are",
+        "centiare (ca)": "Centiare",
+        "cm²": "Centímetro²",
+        "ha": "Hectare",
+        "jarda²": "Jarda²",
+        "km²": "Quilômetro²",
+        "m²": "Metro²",
+        "milha²": "Milha²",
+        "mm²": "Milímetro²",
+        "pé²": "Pé²",
+        "polegada²": "Polegada²",
+        "tarefa (Bahia)": "Tarefa (Bahia)"
+      },
+      "comprimento": {
+        "ano-luz": "Ano-luz",
+        "cm": "Centímetro",
+        "ft": "Pé",
+        "in": "Polegada",
+        "km": "Quilômetro",
+        "m": "Metro",
+        "mi": "Milha",
+        "milha náutica": "Milha náutica",
+        "mm": "Milímetro",
+        "nm": "Nanômetro",
+        "parsec (pc)": "Parsec",
+        "UA (Unidade Astronômica)": "Unidade Astronômica",
+        "µm": "Micrômetro",
+        "yd": "Jarda"
+      },
+      "dados": {
+        "bit": "Bit",
+        "byte": "Byte",
+        "EiB": "Exbibyte",
+        "GB": "Gigabyte",
+        "GiB": "Gibibyte",
+        "KB": "Kilobyte",
+        "KiB": "Kibibyte",
+        "MB": "Megabyte",
+        "MiB": "Mebibyte",
+        "nibble": "Nibble",
+        "PB": "Petabyte",
+        "PiB": "Pebibyte",
+        "TB": "Terabyte",
+        "TiB": "Tebibyte"
+      },
+      "energia": {
+        "BTU": "BTU",
+        "cal": "Caloria",
+        "eV": "Elétron-volt",
+        "erg": "Erg",
+        "J": "Joule",
+        "kcal": "Quilocaloria",
+        "kJ": "Quilojoule",
+        "MJ": "Megajoule",
+        "termia": "Termia",
+        "Wh": "Watt-hora",
+        "kWh": "Quilowatt-hora"
+      },
+      "força": {
+        "dina": "Dina",
+        "kgf": "Quilograma-força",
+        "kN": "Quilonewton",
+        "lbf": "Libra-força",
+        "libra-pé": "Libra-pé",
+        "N": "Newton"
+      },
+      "frequência": {
+        "GHz": "Gigahertz",
+        "Hz": "Hertz",
+        "kHz": "Quilohertz",
+        "MHz": "Megahertz",
+        "rpm": "Rotações por minuto",
+        "THz": "Terahertz"
+      },
+      "iluminação": {
+        "candela (cd)": "Candela",
+        "lúmen (lm)": "Lúmen",
+        "lux (lx)": "Lux"
+      },
+      "massa": {
+        "arroba": "Arroba",
+        "g": "Grama",
+        "grain (gr)": "Grain",
+        "kg": "Quilograma",
+        "lb": "Libra",
+        "mg": "Miligrama",
+        "oz": "Onça",
+        "pedra": "Pedra",
+        "quilate": "Quilate",
+        "t": "Tonelada",
+        "tonelada curta": "Tonelada curta (US)",
+        "tonelada longa": "Tonelada longa (UK)"
+      },
+      "potência": {
+        "BTU/h": "BTU por hora",
+        "cal/s": "Caloria por segundo",
+        "CV": "Cavalo-vapor",
+        "HP": "Horsepower",
+        "kW": "Quilowatt",
+        "MW": "Megawatt",
+        "W": "Watt"
+      },
+      "pressão": {
+        "atm": "Atmosfera padrão",
+        "bar": "Bar",
+        "inHg": "Polegada de mercúrio",
+        "kPa": "Quilopascal",
+        "MPa": "Megapascal",
+        "mmHg": "Milímetro de mercúrio",
+        "Pa": "Pascal",
+        "psi": "Libra por polegada quadrada",
+        "Torr": "Torr"
+      },
+      "radioatividade": {
+        "becquerel (Bq)": "Becquerel",
+        "curie (Ci)": "Curie",
+        "gray (Gy)": "Gray",
+        "sievert (Sv)": "Sievert"
+      },
+      "temperatura": {
+        "C": "Celsius",
+        "F": "Fahrenheit",
+        "K": "Kelvin",
+        "R": "Rankine",
+        "Ré": "Réaumur"
+      },
+      "tempo": {
+        "ano": "Ano",
+        "dia": "Dia",
+        "h": "Hora",
+        "mês": "Mês",
+        "milênio": "Milênio",
+        "min": "Minuto",
+        "ms": "Milissegundo",
+        "ns": "Nanossegundo",
+        "s": "Segundo",
+        "século": "Século",
+        "semana": "Semana",
+        "µs": "Microssegundo"
+      },
+      "velocidade": {
+        "km/h": "Quilômetro por hora",
+        "Mach": "Mach",
+        "m/s": "Metro por segundo",
+        "mi/h": "Milha por hora",
+        "nó": "Nó",
+        "pé/s": "Pé por segundo",
+        "velocidade da luz (c)": "Velocidade da luz"
+      },
+      "volume": {
+        "alqueire (volume)": "Alqueire (volume)",
+        "barril (petróleo)": "Barril de petróleo",
+        "colher de chá": "Colher de chá",
+        "colher de sopa": "Colher de sopa",
+        "fl oz": "Onça fluida",
+        "gal": "Galão (EUA)",
+        "L": "Litro",
+        "m³": "Metro cúbico",
+        "mL": "Mililitro",
+        "pt": "Pinta (EUA)",
+        "qt": "Quarto (EUA)",
+        "xícara": "Xícara"
+      },
+      "vazão": {
+        "cfm": "Pé cúbico por minuto",
+        "gpm": "Galão por minuto",
+        "m³/h": "Metro cúbico por hora"
+      }
+    };
+
+    let history = JSON.parse(localStorage.getItem('conversionHistory')) || [];
+    let darkMode = localStorage.getItem('darkMode') === 'true';
+
+    function atualizarUnidades() {
+      const categoria = document.getElementById("categoria").value;
+      const de = document.getElementById("de");
+      const para = document.getElementById("para");
+
+      de.innerHTML = "";
+      para.innerHTML = "";
+
+      for (let unidade in nomes[categoria]) {
+        const op1 = new Option(nomes[categoria][unidade], unidade);
+        const op2 = new Option(nomes[categoria][unidade], unidade);
+        de.appendChild(op1);
+        para.appendChild(op2);
+      }
+      
+      // Definir seleções padrão úteis
+      if (categoria === "temperatura") {
+        de.value = "C";
+        para.value = "F";
+      } else if (categoria === "dados") {
+        de.value = "MB";
+        para.value = "GB";
+      }
+    }
+
+    function formatarNumero(num) {
+      // Formata números muito grandes ou muito pequenos em notação científica
+      if (Math.abs(num) >= 1e6 || (Math.abs(num) < 1e-4 && num !== 0)) {
+        return num.toExponential(4);
+      }
+      return Number(num.toFixed(6)).toLocaleString("pt-BR");
+    }
+
+    function converterTemperatura(valor, de, para) {
+      // Conversões para Kelvin (unidade base)
+      let kelvin;
+      switch(de) {
+        case "C": kelvin = valor + 273.15; break;
+        case "F": kelvin = (valor + 459.67) * 5/9; break;
+        case "R": kelvin = valor * 5/9; break;
+        case "Ré": kelvin = valor * 5/4 + 273.15; break;
+        default: kelvin = valor; // Assume que já está em Kelvin
+      }
+
+      // Conversão de Kelvin para unidade desejada
+      switch(para) {
+        case "C": return kelvin - 273.15;
+        case "F": return kelvin * 9/5 - 459.67;
+        case "R": return kelvin * 9/5;
+        case "Ré": return (kelvin - 273.15) * 4/5;
+        default: return kelvin; // Retorna em Kelvin
+      }
+    }
+
+    function converter() {
+      const categoria = document.getElementById("categoria").value;
+      const valorInput = document.getElementById("valor");
+      const valor = parseFloat(valorInput.value);
+      const de = document.getElementById("de").value;
+      const para = document.getElementById("para").value;
+
+      if (isNaN(valor)) {
+        document.getElementById("resultado").innerText = "Digite um valor válido.";
+        return;
+      }
+
+      let resultado;
+
+      if (categoria === "temperatura") {
+        resultado = converterTemperatura(valor, de, para);
+      } else {
+        const base = valor * unidades[categoria][de];
+        resultado = base / unidades[categoria][para];
+      }
+
+      const resultadoFormatado = formatarNumero(resultado);
+      const resultadoTexto = `${valor} ${nomes[categoria][de]} = ${resultadoFormatado} ${nomes[categoria][para]}`;
+      
+      document.getElementById("resultado").innerText = resultadoTexto;
+      
+      // Adicionar ao histórico
+      addToHistory({
+        categoria,
+        valorOriginal: valor,
+        unidadeOriginal: de,
+        valorConvertido: resultado,
+        unidadeConvertida: para,
+        timestamp: new Date().toISOString()
+      });
+      
+      // Salvar no localStorage
+      saveHistory();
+      
+      // Atualizar exibição do histórico
+      updateHistoryDisplay();
+    }
+
+    function swapUnits() {
+      const de = document.getElementById("de");
+      const para = document.getElementById("para");
+      const temp = de.value;
+      de.value = para.value;
+      para.value = temp;
+      
+      // Se houver um valor e resultado, converter automaticamente
+      const valorInput = document.getElementById("valor");
+      if (valorInput.value && !isNaN(parseFloat(valorInput.value))) {
+        converter();
+      }
+    }
+
+    function addToHistory(conversion) {
+      history.unshift(conversion); // Adiciona no início do array
+      if (history.length > 10) {
+        history.pop(); // Mantém apenas os 10 mais recentes
+      }
+    }
+
+    function saveHistory() {
+      localStorage.setItem('conversionHistory', JSON.stringify(history));
+    }
+
+    function updateHistoryDisplay() {
+      const historyList = document.getElementById("historyList");
+      historyList.innerHTML = '';
+      
+      history.forEach((item, index) => {
+        const formattedValue = formatarNumero(item.valorConvertido);
+        const historyItem = document.createElement('div');
+        historyItem.className = 'history-item';
+        historyItem.innerHTML = `
+          ${item.valorOriginal} ${nomes[item.categoria][item.unidadeOriginal]} 
+          → ${formattedValue} ${nomes[item.categoria][item.unidadeConvertida]}
+          <small>(${new Date(item.timestamp).toLocaleString()})</small>
+        `;
+        historyList.appendChild(historyItem);
+      });
+    }
+
+    function clearHistory() {
+      history = [];
+      saveHistory();
+      updateHistoryDisplay();
+    }
+
+    function toggleDarkMode() {
+      darkMode = !darkMode;
+      document.body.classList.toggle('dark-mode', darkMode);
+      localStorage.setItem('darkMode', darkMode);
+      
+      // Atualizar ícone do tema
+      const themeToggle = document.getElementById("themeToggle");
+      themeToggle.textContent = darkMode ? "🌞" : "🌑";
+    }
+
+    // Inicialização
+    document.addEventListener('DOMContentLoaded', function() {
+      // Preencher categorias em ordem alfabética
+      const categoriaSelect = document.getElementById("categoria");
+      Object.keys(nomes).sort().forEach(categoria => {
+        const option = new Option(categoria[0].toUpperCase() + categoria.slice(1), categoria);
+        categoriaSelect.appendChild(option);
+      });
+
+      // Configurar tema
+      if (darkMode) {
+        document.body.classList.add('dark-mode');
+      }
+      document.getElementById("themeToggle").textContent = darkMode ? "🌞" : "🌑";
+      
+      // Event listeners
+      document.getElementById("themeToggle").addEventListener('click', toggleDarkMode);
+      document.getElementById("clearHistory").addEventListener('click', clearHistory);
+      
+      // Carregar unidades e histórico
+      atualizarUnidades();
+      updateHistoryDisplay();
+    });
+  </script>
+</body>
+</html>
